@@ -1,2 +1,2 @@
-link : [fmroutine.netlify.app
+link : [class routine
 ](https://fmroutine.netlify.app/)
