@@ -1,0 +1,98 @@
+<!-- edit.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Routine</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>✏️ Edit Routine</h2>
+
+    <form id="edit-form">
+      <input type="text" id="day" placeholder="Day" required />
+      <input type="text" id="time" placeholder="Time" required />
+      <input type="text" id="subject" placeholder="Subject" required />
+      <input type="text" id="teacher" placeholder="Teacher" required />
+      <input type="text" id="room" placeholder="Room" required />
+      <input type="text" id="department" placeholder="Department" required />
+      <input type="text" id="semester" placeholder="Semester" required />
+      <button type="submit">Update Routine</button>
+    </form>
+
+    <a href="index.html" class="button" style="background:#777;">← Back</a>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getFirestore, doc, getDoc, updateDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBomo-m2ELXKmEmZLHthSeRw7migfOrvEU",
+      authDomain: "class-routine-885c0.firebaseapp.com",
+      projectId: "class-routine-885c0",
+      storageBucket: "class-routine-885c0.firebasestorage.app",
+      messagingSenderId: "625895455525",
+      appId: "1:625895455525:web:0f2f8a53f24494c37a38cc"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const params = new URLSearchParams(window.location.search);
+    const routineId = params.get("id");
+
+    const day = document.getElementById("day");
+    const time = document.getElementById("time");
+    const subject = document.getElementById("subject");
+    const teacher = document.getElementById("teacher");
+    const room = document.getElementById("room");
+    const department = document.getElementById("department");
+    const semester = document.getElementById("semester");
+
+    const form = document.getElementById("edit-form");
+
+    async function loadRoutine() {
+      const docRef = doc(db, "routines", routineId);
+      const snap = await getDoc(docRef);
+
+      if (snap.exists()) {
+        const data = snap.data();
+        day.value = data.day;
+        time.value = data.time;
+        subject.value = data.subject;
+        teacher.value = data.teacher;
+        room.value = data.room;
+        department.value = data.department;
+        semester.value = data.semester;
+      } else {
+        alert("Routine not found!");
+        window.location.href = "index.html";
+      }
+    }
+
+    loadRoutine();
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const updated = {
+        day: day.value.trim(),
+        time: time.value.trim(),
+        subject: subject.value.trim(),
+        teacher: teacher.value.trim(),
+        room: room.value.trim(),
+        department: department.value.trim(),
+        semester: semester.value.trim()
+      };
+
+      await updateDoc(doc(db, "routines", routineId), updated);
+      alert("Routine updated!");
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>

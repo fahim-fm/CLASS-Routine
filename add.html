@@ -1,0 +1,71 @@
+<!-- add.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Routine</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>➕ Add New Routine</h2>
+
+    <form id="routine-form">
+      <input type="text" id="day" placeholder="Day (e.g., Monday)" required />
+      <input type="text" id="time" placeholder="Time Slot (e.g., 10:00-11:00)" required />
+      <input type="text" id="subject" placeholder="Subject" required />
+      <input type="text" id="teacher" placeholder="Teacher" required />
+      <input type="text" id="room" placeholder="Room" required />
+      <input type="text" id="department" placeholder="Department" required />
+      <input type="text" id="semester" placeholder="Semester" required />
+      <button type="submit">Add Routine</button>
+    </form>
+
+    <a href="index.html" class="button" style="background: #777;">← Back</a>
+  </div>
+
+  <script type="module">
+    import {
+      initializeApp
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBomo-m2ELXKmEmZLHthSeRw7migfOrvEU",
+      authDomain: "class-routine-885c0.firebaseapp.com",
+      projectId: "class-routine-885c0",
+      storageBucket: "class-routine-885c0.firebasestorage.app",
+      messagingSenderId: "625895455525",
+      appId: "1:625895455525:web:0f2f8a53f24494c37a38cc"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const routineRef = collection(db, "routines");
+
+    const form = document.getElementById("routine-form");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const day = document.getElementById("day").value.trim();
+      const time = document.getElementById("time").value.trim();
+      const subject = document.getElementById("subject").value.trim();
+      const teacher = document.getElementById("teacher").value.trim();
+      const room = document.getElementById("room").value.trim();
+      const department = document.getElementById("department").value.trim();
+      const semester = document.getElementById("semester").value.trim();
+
+      await addDoc(routineRef, {
+        day, time, subject, teacher, room, department, semester
+      });
+
+      alert("Routine added successfully!");
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>
